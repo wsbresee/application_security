@@ -46,6 +46,7 @@ int check_words(FILE* fp, hashmap_t hashtable[], char* misspelled[]) {
         while (word != NULL) {
             remove_punct_and_make_lower_case(word);
             if (!check_word(word, hashtable)) {
+                printf(word);
                 misspelled[num_misspelled] = word;
                 num_misspelled++;
             }
@@ -86,24 +87,22 @@ bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]) {
 }
 
 bool check_word(const char* word, hashmap_t hashtable[]) {
-    int bucket;
-    hashmap_t cursor;
-    bucket = hash_function(word);
-    cursor = hashtable[bucket];
-
-    while (cursor != NULL) {
-
-        if (!strcmp(word, cursor->word)) {
-            return 1;
-        }
-        cursor = cursor->next;
-    }
+    int bucket = hash_function(word);
+    hashmap_t cursor = hashtable[bucket];
 
     const int length = strlen(word);
-    char* lower_case = (char*)malloc(length + 1);
+    char* lower_case = malloc(sizeof(char) * (length + 1));
     lower_case[length] = 0;
     for(int i = 0; i < length; i++) {
         lower_case[i] = tolower(word[i]);
+    }
+
+    while (cursor != NULL) {
+        if (!strcmp(word, cursor->word)) {
+            // free(lower_case);
+            return 1;
+        }
+        cursor = cursor->next;
     }
 
     bucket = hash_function(lower_case);
@@ -111,11 +110,12 @@ bool check_word(const char* word, hashmap_t hashtable[]) {
 
     while (cursor != NULL) {
         if (!strcmp(lower_case, cursor->word)) {
+            // free(lower_case);
             return 1;
         }
         cursor = cursor->next;
     }
 
-    free(lower_case);
+    // free(lower_case);
     return 0;
 }

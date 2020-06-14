@@ -13,17 +13,20 @@ int main(int argc, char** argv) {
         fprintf(stderr, "Usage: ./program to_check.txt wordlist.txt\n");
         exit(-1);
     }
-    char read_mode[2] = "r";
-    FILE* fp = fopen(argv[1], read_mode);
+    FILE* fp = fopen(argv[1], "r");
     char * dictionary = argv[2];
     if (!load_dictionary(dictionary, hashtable)) {
         fprintf(stderr, "Doubldn't load dictionary %s\n", argv[2]);
         return 1;
     }
     char* misspelled[MAX_MISSPELLED];
-    int num_wrong = check_words(fp, hashtable, misspelled);
-    for (int i = 0; i < num_wrong; i++) {
+    for (int i = 0; i < MAX_MISSPELLED; i++) {
+        misspelled[MAX_MISSPELLED] = (char*)malloc(LENGTH*sizeof(char));
+    }
+    int num_misspelled = check_words(fp, hashtable, misspelled);
+    printf("final misspelled words: ");
+    for (int i = 0; i < num_misspelled; i++) {
         printf("%s\n", misspelled[i]);
     }
-    for (int i = 0; i < num_wrong; i++) free(misspelled[i]);
+    // for (int i = 0; i < num_misspelled; i++) free(misspelled[i]);
 }
