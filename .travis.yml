@@ -1,3 +1,4 @@
 language: c
-install: make
+install: skip
 compiler: gcc
+script: make
