@@ -42,15 +42,15 @@ int check_words(FILE* fp, hashmap_t hashtable[], char* misspelled[]) {
     int num_misspelled = 0;
     char line[MAX_MISSPELLED];
     while (fgets(line, MAX_MISSPELLED, fp)) {
-        char *word = strtok(line, " ");
+        char *word = strtok(line, " \"\t\n\v\f\r");
         while (word != NULL) {
             remove_punct_and_make_lower_case(word);
             if (!check_word(word, hashtable)) {
-                printf(word);
-                misspelled[num_misspelled] = word;
+                // printf(word);
+                misspelled[num_misspelled] = strdup(word);
                 num_misspelled++;
             }
-            word = strtok(NULL, " ");
+            word = strtok(NULL, " \"\t\n\v\f\r");
         }
     }
     return num_misspelled;

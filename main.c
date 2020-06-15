@@ -5,7 +5,7 @@
 #include <ctype.h>
 #include "dictionary.h"
 
-/*this function borrowed from online*/
+/*this function borrowed from online and modified*/
 int main(int argc, char** argv) {
     hashmap_t hashtable[HASH_SIZE];
     if (argc < 3) {
@@ -28,5 +28,4 @@ int main(int argc, char** argv) {
     for (int i = 0; i < num_misspelled; i++) {
         printf("%s\n", misspelled[i]);
     }
-    // for (int i = 0; i < num_misspelled; i++) free(misspelled[i]);
 }
