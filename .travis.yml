@@ -1,5 +1,5 @@
 language: c
-before-install: make get-deps
+install: make get-deps
 compiler: gcc
 script: make
 test: make test
