@@ -1,7 +1,6 @@
 language: c
+install: make get-deps
 compiler: gcc
 script: make
-jobs:
-    include:
-        stage: test
-        script: make test
+test: make test
+
