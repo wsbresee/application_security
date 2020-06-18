@@ -46,12 +46,12 @@ int check_words(FILE* fp, hashmap_t hashtable[], char* misspelled[]) {
         while (word != NULL) {
             remove_punct_and_make_lower_case(word);
             if (!check_word(word, hashtable)) {
-                // printf(word);
                 misspelled[num_misspelled] = strdup(word);
                 num_misspelled++;
             }
             word = strtok(NULL, " \"\t\n\v\f\r");
         }
+        free(word);
     }
     return num_misspelled;
 }
@@ -61,15 +61,15 @@ bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]) {
         hashtable[i] = NULL;
     }
 
-    FILE* dict_file = fopen(dictionary_file, "r");
+    FILE* dictionary_pointer = fopen(dictionary_file, "r");
     hashmap_t new_node;
 
-    if (dict_file == NULL) {
+    if (dictionary_pointer == NULL) {
         return 0;
     }
 
     char word[LENGTH];
-    while (fgets(word, LENGTH, dict_file) != NULL) {
+    while (fgets(word, LENGTH, dictionary_pointer) != NULL) {
         word[strcspn(word, " \"\t\n\v\f\r")] = 0;
         new_node = malloc(sizeof(struct node));
         new_node->next = NULL;
@@ -82,13 +82,21 @@ bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]) {
             hashtable[bucket] = new_node;
         }
     }
-    fclose(dict_file);
+    fclose(dictionary_pointer);
     return 1;
 }
 
 bool check_word(const char* word, hashmap_t hashtable[]) {
     int bucket = hash_function(word);
     hashmap_t cursor = hashtable[bucket];
+
+
+    while (cursor != NULL) {
+        if (!strcmp(word, cursor->word)) {
+            return 1;
+        }
+        cursor = cursor->next;
+    }
 
     const int length = strlen(word);
     char* lower_case = malloc(sizeof(char) * (length + 1));
@@ -97,25 +105,17 @@ bool check_word(const char* word, hashmap_t hashtable[]) {
         lower_case[i] = tolower(word[i]);
     }
 
-    while (cursor != NULL) {
-        if (!strcmp(word, cursor->word)) {
-            // free(lower_case);
-            return 1;
-        }
-        cursor = cursor->next;
-    }
-
     bucket = hash_function(lower_case);
     cursor = hashtable[bucket];
 
     while (cursor != NULL) {
         if (!strcmp(lower_case, cursor->word)) {
-            // free(lower_case);
+            free(lower_case);
             return 1;
         }
         cursor = cursor->next;
     }
 
-    // free(lower_case);
+    free(lower_case);
     return 0;
 }

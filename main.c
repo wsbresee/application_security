@@ -8,24 +8,24 @@
 /*this function borrowed from online and modified*/
 int main(int argc, char** argv) {
     hashmap_t hashtable[HASH_SIZE];
-    if (argc < 3) {
-        fprintf(stderr, "Error: Insufficient arguments!\n");
-        fprintf(stderr, "Usage: ./program to_check.txt wordlist.txt\n");
-        exit(-1);
-    }
     FILE* fp = fopen(argv[1], "r");
-    char * dictionary = argv[2];
-    if (!load_dictionary(dictionary, hashtable)) {
-        fprintf(stderr, "Doubldn't load dictionary %s\n", argv[2]);
-        return 1;
-    }
+    load_dictionary(argv[2], hashtable);
     char* misspelled[MAX_MISSPELLED];
-    for (int i = 0; i < MAX_MISSPELLED; i++) {
-        misspelled[MAX_MISSPELLED] = (char*)malloc(LENGTH*sizeof(char));
-    }
     int num_misspelled = check_words(fp, hashtable, misspelled);
     printf("final misspelled words: ");
     for (int i = 0; i < num_misspelled; i++) {
         printf("%s\n", misspelled[i]);
     }
+    for (int i = 0; i < num_misspelled; i++) {
+        free(misspelled[i]);
+    }
+    for (int i = 0; i < HASH_SIZE; i++) {
+        hashmap_t hashmap = hashtable[i];
+        while (hashmap) {
+            hashmap_t next_hashmap = hashmap->next;
+            free(hashmap);
+            hashmap = next_hashmap;
+        }
+    }
+    fclose(fp);
 }
