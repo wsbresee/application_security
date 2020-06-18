@@ -1,5 +1,4 @@
 language: c
-install: skip
 compiler: gcc
 script: make
 jobs:
