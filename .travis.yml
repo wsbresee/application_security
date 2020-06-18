@@ -1,5 +1,7 @@
 language: c
-install: make get-deps
+install:
+  - sudo apt-get update
+  - make get-deps
 compiler: gcc
 script: make
 test: make test
