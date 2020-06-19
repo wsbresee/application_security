@@ -28,3 +28,6 @@ clean:
 
 cleanall:clean
 	rm spell_check
+
+fuzz: dictionary.o spell.o fuzz_main.o
+	afl-gcc -Wall -o fuzz_main fuzz_main.o spell.o dictionary.o -lcheck -lm -lrt -lpthread -lsubunit
