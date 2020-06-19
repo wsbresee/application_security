@@ -73,6 +73,14 @@ char* lower_case(const char* word) {
 }
 
 bool check_word(const char* word, hashmap_t hashtable[]) {
+    for (int i = 0; i < strlen(word); i++) {
+        if (!isdigit(word[i])) {
+            break;
+        }
+        if (i == strlen(word) - 1) {
+            return 1;
+        }
+    }
     int bucket = hash_function(word);
     hashmap_t cursor = hashtable[bucket];
     while (cursor != NULL) {

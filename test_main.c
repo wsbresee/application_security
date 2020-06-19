@@ -12,6 +12,21 @@ START_TEST(test_dictionary_normal)
     // Here we can test if certain words ended up in certain buckets
     // to ensure that our load_dictionary works as intended. I leave
     // this as an exercise.
+    char *words[4] = {"first", "second", "third", "test"};
+    int bucket;
+    int word_properly_loaded[4] = {0, 0, 0, 0};
+    hashmap_t cursor;
+    for (int i = 0; i < 4; i++) {
+        bucket = hash_function(words[i]);
+        cursor = hashtable[bucket];
+        while(cursor != NULL) {
+            if (!strcmp(words[i], cursor->word)) {
+                word_properly_loaded[i] = 1;
+            }
+            cursor = cursor->next;
+        }
+        ck_assert(word_properly_loaded[i]);
+    }
 }
 END_TEST
 
@@ -24,6 +39,10 @@ START_TEST(test_check_word_normal)
     ck_assert(check_word(correct_word, hashtable));
     ck_assert(!check_word(punctuation_word_2, hashtable));
     // Test here: What if a word begins and ends with "?
+    const char* question_marks_word = "?justice?";
+    ck_assert(!check_word(question_marks_word, hashtable));
+    const char* numbers = "123456789";
+    ck_assert(check_word(numbers, hashtable));
 }
 END_TEST
 
@@ -58,6 +77,7 @@ check_word_suite(void)
     check_word_case = tcase_create("Core");
     tcase_add_test(check_word_case, test_check_word_normal);
     tcase_add_test(check_word_case, test_check_words_normal);
+    tcase_add_test(check_word_case, test_dictionary_normal);
     suite_add_tcase(suite, check_word_case);
 
     return suite;
