@@ -77,4 +77,3 @@ main(void)
     srunner_free(runner);
     return (failed == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
-
