@@ -65,11 +65,11 @@ bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]) {
 }
 
 char* lower_case(const char* word) {
-    char *new_word = malloc(strlen(word) * sizeof(char*));
+    char *lower_case_word = malloc(strlen(word) * sizeof(char*));
     for (int i = 0; i < strlen(word); i++) {
-        new_word[i] = tolower(word[i]);
+        lower_case_word[i] = tolower(word[i]);
     }
-    return new_word;
+    return lower_case_word;
 }
 
 bool check_word(const char* word, hashmap_t hashtable[]) {
